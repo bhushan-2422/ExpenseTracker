@@ -1,5 +1,7 @@
 package com.user.userservice.service;
 
+import java.security.PublicKey;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -29,6 +31,16 @@ public class UserService {
         };
 
         UserInfo user = userRepository.findByUserId(userInfoDto.getUserId()).map(updatingUser).orElseGet(createUser);
+        return new UserInfoDto(user.getUserId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber());
+    }
+
+    public UserInfoDto getUser(UserInfoDto userInfoDto) throws Exception{
+        Optional<UserInfo> userInfo =  userRepository.findByUserId(userInfoDto.getUserId());
+        if(userInfo.isEmpty()){
+            throw new Exception("user not found");
+        }
+
+        UserInfo user = userInfo.get();
         return new UserInfoDto(user.getUserId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber());
     }
 }
